@@ -1,0 +1,21 @@
+require 'fileutils'
+require 'Nokogiri'
+
+Dir['F:/Transcoder/staging/*.xml'].each do |f|
+
+  rename = File.basename("#{f}", '.xml')
+
+  doc = Nokogiri::XML(File.open("#{f}"))
+
+  puts doc
+
+  repo_get = doc.xpath('//source_filename/text()')
+
+  puts repo_get
+
+  staging = "F:/Transcoder/staging/#{rename}.mp4"
+
+  FileUtils.copy "F:/Transcoder/repo/#{repo_get}.mp4", staging
+
+end
+
