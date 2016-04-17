@@ -17,7 +17,5 @@ Dir['F:/Transcoder/staging/*.xml'].each do |f|
 
   FileUtils.copy "F:/Transcoder/repo/#{repo_get}.mp4", staging
 
-  # this
-
 end
 
