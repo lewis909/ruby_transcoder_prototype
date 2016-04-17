@@ -2,7 +2,7 @@ require 'securerandom'
 require 'fileutils'
 require 'thread'
 require 'Nokogiri'
-require "mysql2"
+require 'mysql2'
 
 
 
@@ -21,7 +21,7 @@ def process_1
     new_folder = SecureRandom.uuid
     t_log = "#{file_name}_#{timestamp}"
 
-    dbc = Mysql2::Client.new(:host => "localhost",:username => "lewis_transcode", :password => "tool4602", :database => "media_hub")
+    dbc = Mysql2::Client.new(:host => 'localhost',:username => 'lewis_transcode', :password => 'tool4602', :database => 'media_hub')
 
 
     if File.exists?("F:/Transcoder/staging/#{file_name}.mp4") && File.exist?("F:/Transcoder/staging/#{xml}")
@@ -38,16 +38,12 @@ def process_1
 
       doc = Nokogiri::XML(File.open("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/#{xml}"))
 
-      #TODO: MYSQL Call made - Update status Processing
       task_id_get = doc.xpath('//manifest/@task_id')
       task_id = task_id_get.to_s
 
       puts ''
       puts "Processing Task #{task_id}"
       puts ''
-
-
-      #TODO: I need to build a variable for the xml
 
 
 
@@ -69,8 +65,6 @@ def process_1
       transcode = transcode_get.to_s.gsub(/C_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRG_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{t_log}")
 
       puts conform
-
-      #TODO: MYSQL Call made - Update status Conforming
 
       conform_query = dbc.query("UPDATE task SET status ='Conforming' WHERE task_id ='#{task_id}'")
       conform_query
@@ -94,7 +88,6 @@ def process_1
       puts ''
 
 
-      #TODO: MYSQL Call made - Update status transcoding
       transcode_query = dbc.query("UPDATE task SET status ='Transcoding' WHERE task_id ='#{task_id}'")
       transcode_query
 
@@ -104,7 +97,6 @@ def process_1
       puts "#{time} Transcode complete"
       puts ''
 
-      # TODO: MYSQL Call made - Update status Complete
 
       transcode_query = dbc.query("UPDATE task SET status ='Complete' WHERE task_id ='#{task_id}'")
       transcode_query
@@ -147,7 +139,7 @@ def process_2
     new_folder = SecureRandom.uuid
     t_log = "#{file_name}_#{timestamp}"
 
-    dbc = Mysql2::Client.new(:host => "localhost",:username => "lewis_transcode", :password => "tool4602", :database => "media_hub")
+    dbc = Mysql2::Client.new(:host => 'localhost',:username => 'lewis_transcode', :password => 'tool4602', :database => 'media_hub')
 
 
     if File.exists?("F:/Transcoder/staging/#{file_name}.mp4") && File.exist?("F:/Transcoder/staging/#{xml}")
@@ -164,16 +156,12 @@ def process_2
 
       doc = Nokogiri::XML(File.open("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/#{xml}"))
 
-      #TODO: MYSQL Call made - Update status Processing
       task_id_get = doc.xpath('//manifest/@task_id')
       task_id = task_id_get.to_s
 
       puts ''
       puts "Processing Task #{task_id}"
       puts ''
-
-
-      #TODO: I need to build a variable for the xml
 
 
 
@@ -196,8 +184,6 @@ def process_2
 
       puts conform
 
-      #TODO: MYSQL Call made - Update status Conforming
-
       conform_query = dbc.query("UPDATE task SET status ='Conforming' WHERE task_id ='#{task_id}'")
       conform_query
 
@@ -219,8 +205,6 @@ def process_2
       puts "#{time} Transcode started"
       puts ''
 
-
-      #TODO: MYSQL Call made - Update status transcoding
       transcode_query = dbc.query("UPDATE task SET status ='Transcoding' WHERE task_id ='#{task_id}'")
       transcode_query
 
@@ -229,8 +213,6 @@ def process_2
       puts ''
       puts "#{time} Transcode complete"
       puts ''
-
-      # TODO: MYSQL Call made - Update status Complete
 
       transcode_query = dbc.query("UPDATE task SET status ='Complete' WHERE task_id ='#{task_id}'")
       transcode_query
@@ -271,7 +253,7 @@ def process_3
     new_folder = SecureRandom.uuid
     t_log = "#{file_name}_#{timestamp}"
 
-    dbc = Mysql2::Client.new(:host => "localhost",:username => "lewis_transcode", :password => "tool4602", :database => "media_hub")
+    dbc = Mysql2::Client.new(:host => 'localhost',:username => 'lewis_transcode', :password => 'tool4602', :database => 'media_hub')
 
 
     if File.exists?("F:/Transcoder/staging/#{file_name}.mp4") && File.exist?("F:/Transcoder/staging/#{xml}")
@@ -287,19 +269,12 @@ def process_3
       FileUtils.mv Dir.glob("F:/Transcoder/staging/#{xml}"), temp_folder
 
       doc = Nokogiri::XML(File.open("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/#{xml}"))
-
-      #TODO: MYSQL Call made - Update status Processing
       task_id_get = doc.xpath('//manifest/@task_id')
       task_id = task_id_get.to_s
 
       puts ''
       puts "Processing Task #{task_id}"
       puts ''
-
-
-      #TODO: I need to build a variable for the xml
-
-
 
       puts ''
       puts 'Parsing xml'
@@ -319,8 +294,6 @@ def process_3
       transcode = transcode_get.to_s.gsub(/C_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRG_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{t_log}")
 
       puts conform
-
-      #TODO: MYSQL Call made - Update status Conforming
 
       conform_query = dbc.query("UPDATE task SET status ='Conforming' WHERE task_id ='#{task_id}'")
       conform_query
@@ -343,8 +316,6 @@ def process_3
       puts "#{time} Transcode started"
       puts ''
 
-
-      #TODO: MYSQL Call made - Update status transcoding
       transcode_query = dbc.query("UPDATE task SET status ='Transcoding' WHERE task_id ='#{task_id}'")
       transcode_query
 
@@ -353,8 +324,6 @@ def process_3
       puts ''
       puts "#{time} Transcode complete"
       puts ''
-
-      # TODO: MYSQL Call made - Update status Complete
 
       transcode_query = dbc.query("UPDATE task SET status ='Complete' WHERE task_id ='#{task_id}'")
       transcode_query
@@ -394,7 +363,7 @@ def process_4
     new_folder = SecureRandom.uuid
     t_log = "#{file_name}_#{timestamp}"
 
-    dbc = Mysql2::Client.new(:host => "localhost",:username => "lewis_transcode", :password => "tool4602", :database => "media_hub")
+    dbc = Mysql2::Client.new(:host => 'localhost',:username => 'lewis_transcode', :password => 'tool4602', :database => 'media_hub')
 
 
     if File.exists?("F:/Transcoder/staging/#{file_name}.mp4") && File.exist?("F:/Transcoder/staging/#{xml}")
@@ -411,16 +380,12 @@ def process_4
 
       doc = Nokogiri::XML(File.open("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/#{xml}"))
 
-      #TODO: MYSQL Call made - Update status Processing
       task_id_get = doc.xpath('//manifest/@task_id')
       task_id = task_id_get.to_s
 
       puts ''
       puts "Processing Task #{task_id}"
       puts ''
-
-
-      #TODO: I need to build a variable for the xml
 
 
 
@@ -442,8 +407,6 @@ def process_4
       transcode = transcode_get.to_s.gsub(/C_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRG_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{t_log}")
 
       puts conform
-
-      #TODO: MYSQL Call made - Update status Conforming
 
       conform_query = dbc.query("UPDATE task SET status ='Conforming' WHERE task_id ='#{task_id}'")
       conform_query
@@ -467,7 +430,6 @@ def process_4
       puts ''
 
 
-      #TODO: MYSQL Call made - Update status transcoding
       transcode_query = dbc.query("UPDATE task SET status ='Transcoding' WHERE task_id ='#{task_id}'")
       transcode_query
 
@@ -476,8 +438,6 @@ def process_4
       puts ''
       puts "#{time} Transcode complete"
       puts ''
-
-      # TODO: MYSQL Call made - Update status Complete
 
       transcode_query = dbc.query("UPDATE task SET status ='Complete' WHERE task_id ='#{task_id}'")
       transcode_query
