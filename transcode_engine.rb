@@ -19,7 +19,7 @@ def process_1
     time = Time.now.getutc
     timestamp = time.to_s[0,19].gsub(/ /,'-').gsub(/:/,'')
     new_folder = SecureRandom.uuid
-    t_log = "#{file_name}_#{timestamp}"
+
 
     dbc = Mysql2::Client.new(:host => 'localhost',:username => 'lewis_transcode', :password => 'tool4602', :database => 'media_hub')
 
@@ -40,6 +40,7 @@ def process_1
 
       task_id_get = doc.xpath('//manifest/@task_id')
       task_id = task_id_get.to_s
+      t_log = "#{task_id}_#{file_name}_#{timestamp}"
 
       puts ''
       puts "Processing Task #{task_id}"
@@ -137,7 +138,6 @@ def process_2
     time = Time.now.getutc
     timestamp = time.to_s[0,19].gsub(/ /,'-').gsub(/:/,'')
     new_folder = SecureRandom.uuid
-    t_log = "#{file_name}_#{timestamp}"
 
     dbc = Mysql2::Client.new(:host => 'localhost',:username => 'lewis_transcode', :password => 'tool4602', :database => 'media_hub')
 
@@ -158,6 +158,7 @@ def process_2
 
       task_id_get = doc.xpath('//manifest/@task_id')
       task_id = task_id_get.to_s
+      t_log = "#{task_id}_#{file_name}_#{timestamp}"
 
       puts ''
       puts "Processing Task #{task_id}"
@@ -251,7 +252,6 @@ def process_3
     time = Time.now.getutc
     timestamp = time.to_s[0,19].gsub(/ /,'-').gsub(/:/,'')
     new_folder = SecureRandom.uuid
-    t_log = "#{file_name}_#{timestamp}"
 
     dbc = Mysql2::Client.new(:host => 'localhost',:username => 'lewis_transcode', :password => 'tool4602', :database => 'media_hub')
 
@@ -271,6 +271,7 @@ def process_3
       doc = Nokogiri::XML(File.open("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/#{xml}"))
       task_id_get = doc.xpath('//manifest/@task_id')
       task_id = task_id_get.to_s
+      t_log = "#{task_id}_#{file_name}_#{timestamp}"
 
       puts ''
       puts "Processing Task #{task_id}"
@@ -361,7 +362,6 @@ def process_4
     time = Time.now.getutc
     timestamp = time.to_s[0,19].gsub(/ /,'-').gsub(/:/,'')
     new_folder = SecureRandom.uuid
-    t_log = "#{file_name}_#{timestamp}"
 
     dbc = Mysql2::Client.new(:host => 'localhost',:username => 'lewis_transcode', :password => 'tool4602', :database => 'media_hub')
 
@@ -382,6 +382,7 @@ def process_4
 
       task_id_get = doc.xpath('//manifest/@task_id')
       task_id = task_id_get.to_s
+      t_log = "#{task_id}_#{file_name}_#{timestamp}"
 
       puts ''
       puts "Processing Task #{task_id}"
