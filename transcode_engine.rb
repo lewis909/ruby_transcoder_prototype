@@ -17,7 +17,7 @@ def process_1
     xml = file_name+'.xml'
 
     time = Time.now.getutc
-    timestamp = time.to_s[0,19].gsub(/ /,'-').gsub(/:/,'')
+    #timestamp = time.to_s[0,19].gsub(/ /,'-').gsub(/:/,'')
     new_folder = SecureRandom.uuid
 
 
@@ -40,7 +40,6 @@ def process_1
 
       task_id_get = doc.xpath('//manifest/@task_id')
       task_id = task_id_get.to_s
-      t_log = "#{task_id}_#{file_name}_#{timestamp}"
 
       puts ''
       puts "Processing Task #{task_id}"
@@ -58,12 +57,12 @@ def process_1
 
       puts conform_get
 
-      conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/CONFORM_TARGET_DIR/,"#{conform_folder}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{t_log}")
+      conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/CONFORM_TARGET_DIR/,"#{conform_folder}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
 
       transcode_get= doc.xpath('//target_profile/text()')
       target_path= doc.xpath('//target_path/text()')
 
-      transcode = transcode_get.to_s.gsub(/C_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRG_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{t_log}")
+      transcode = transcode_get.to_s.gsub(/C_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRG_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}")
 
       puts conform
 
@@ -136,7 +135,7 @@ def process_2
     xml = file_name+'.xml'
 
     time = Time.now.getutc
-    timestamp = time.to_s[0,19].gsub(/ /,'-').gsub(/:/,'')
+    #timestamp = time.to_s[0,19].gsub(/ /,'-').gsub(/:/,'')
     new_folder = SecureRandom.uuid
 
     dbc = Mysql2::Client.new(:host => 'localhost',:username => 'lewis_transcode', :password => 'tool4602', :database => 'media_hub')
@@ -158,7 +157,6 @@ def process_2
 
       task_id_get = doc.xpath('//manifest/@task_id')
       task_id = task_id_get.to_s
-      t_log = "#{task_id}_#{file_name}_#{timestamp}"
 
       puts ''
       puts "Processing Task #{task_id}"
@@ -176,12 +174,12 @@ def process_2
 
       puts conform_get
 
-      conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/CONFORM_TARGET_DIR/,"#{conform_folder}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{t_log}")
+      conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/CONFORM_TARGET_DIR/,"#{conform_folder}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
 
       transcode_get= doc.xpath('//target_profile/text()')
       target_path= doc.xpath('//target_path/text()')
 
-      transcode = transcode_get.to_s.gsub(/C_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRG_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{t_log}")
+      transcode = transcode_get.to_s.gsub(/C_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRG_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}")
 
       puts conform
 
@@ -250,7 +248,7 @@ def process_3
     xml = file_name+'.xml'
 
     time = Time.now.getutc
-    timestamp = time.to_s[0,19].gsub(/ /,'-').gsub(/:/,'')
+    #timestamp = time.to_s[0,19].gsub(/ /,'-').gsub(/:/,'')
     new_folder = SecureRandom.uuid
 
     dbc = Mysql2::Client.new(:host => 'localhost',:username => 'lewis_transcode', :password => 'tool4602', :database => 'media_hub')
@@ -271,7 +269,6 @@ def process_3
       doc = Nokogiri::XML(File.open("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/#{xml}"))
       task_id_get = doc.xpath('//manifest/@task_id')
       task_id = task_id_get.to_s
-      t_log = "#{task_id}_#{file_name}_#{timestamp}"
 
       puts ''
       puts "Processing Task #{task_id}"
@@ -287,12 +284,12 @@ def process_3
 
       puts conform_get
 
-      conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/CONFORM_TARGET_DIR/,"#{conform_folder}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{t_log}")
+      conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/CONFORM_TARGET_DIR/,"#{conform_folder}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
 
       transcode_get= doc.xpath('//target_profile/text()')
       target_path= doc.xpath('//target_path/text()')
 
-      transcode = transcode_get.to_s.gsub(/C_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRG_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{t_log}")
+      transcode = transcode_get.to_s.gsub(/C_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRG_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}")
 
       puts conform
 
@@ -360,7 +357,7 @@ def process_4
     xml = file_name+'.xml'
 
     time = Time.now.getutc
-    timestamp = time.to_s[0,19].gsub(/ /,'-').gsub(/:/,'')
+    #timestamp = time.to_s[0,19].gsub(/ /,'-').gsub(/:/,'')
     new_folder = SecureRandom.uuid
 
     dbc = Mysql2::Client.new(:host => 'localhost',:username => 'lewis_transcode', :password => 'tool4602', :database => 'media_hub')
@@ -382,7 +379,6 @@ def process_4
 
       task_id_get = doc.xpath('//manifest/@task_id')
       task_id = task_id_get.to_s
-      t_log = "#{task_id}_#{file_name}_#{timestamp}"
 
       puts ''
       puts "Processing Task #{task_id}"
@@ -400,12 +396,12 @@ def process_4
 
       puts conform_get
 
-      conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/CONFORM_TARGET_DIR/,"#{conform_folder}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{t_log}")
+      conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/CONFORM_TARGET_DIR/,"#{conform_folder}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
 
       transcode_get= doc.xpath('//target_profile/text()')
       target_path= doc.xpath('//target_path/text()')
 
-      transcode = transcode_get.to_s.gsub(/C_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRG_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{t_log}")
+      transcode = transcode_get.to_s.gsub(/C_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRG_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}")
 
       puts conform
 
