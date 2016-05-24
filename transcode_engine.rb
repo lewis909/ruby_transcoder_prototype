@@ -36,7 +36,7 @@ def process_1
       FileUtils.mv Dir.glob("#{f}"), temp_folder
       FileUtils.mv Dir.glob("F:/Transcoder/staging/#{xml}"), temp_folder
 
-      doc = Nokogiri::XML(File.open("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/#{xml}"))
+      doc = Nokogiri::XML(File.read("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/#{xml}"))
 
       task_id_get = doc.xpath('//manifest/@task_id')
       task_id = task_id_get.to_s
@@ -153,7 +153,7 @@ def process_2
       FileUtils.mv Dir.glob("#{f}"), temp_folder
       FileUtils.mv Dir.glob("F:/Transcoder/staging/#{xml}"), temp_folder
 
-      doc = Nokogiri::XML(File.open("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/#{xml}"))
+      doc = Nokogiri::XML(File.read("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/#{xml}"))
 
       task_id_get = doc.xpath('//manifest/@task_id')
       task_id = task_id_get.to_s
@@ -266,7 +266,7 @@ def process_3
       FileUtils.mv Dir.glob("#{f}"), temp_folder
       FileUtils.mv Dir.glob("F:/Transcoder/staging/#{xml}"), temp_folder
 
-      doc = Nokogiri::XML(File.open("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/#{xml}"))
+      doc = Nokogiri::XML(File.read("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/#{xml}"))
       task_id_get = doc.xpath('//manifest/@task_id')
       task_id = task_id_get.to_s
 
@@ -375,7 +375,7 @@ def process_4
       FileUtils.mv Dir.glob("#{f}"), temp_folder
       FileUtils.mv Dir.glob("F:/Transcoder/staging/#{xml}"), temp_folder
 
-      doc = Nokogiri::XML(File.open("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/#{xml}"))
+      doc = Nokogiri::XML(File.read("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/#{xml}"))
 
       task_id_get = doc.xpath('//manifest/@task_id')
       task_id = task_id_get.to_s
