@@ -53,16 +53,16 @@ def process_1
       puts doc
       puts ''
 
-      conform_get = doc.xpath('//transcode_profile/text()')
+      conform_get = doc.xpath('//conform_profile/text()')
 
       puts conform_get
 
       conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/CONFORM_TARGET_DIR/,"#{conform_folder}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
 
-      transcode_get= doc.xpath('//target_profile/text()')
+      transcode_get= doc.xpath('//transcode_profile/text()')
       target_path= doc.xpath('//target_path/text()')
 
-      transcode = transcode_get.to_s.gsub(/C_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRG_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}")
+      transcode = transcode_get.to_s.gsub(/T_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRC_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}")
 
       puts conform
 
@@ -170,16 +170,16 @@ def process_2
       puts doc
       puts ''
 
-      conform_get = doc.xpath('//transcode_profile/text()')
+      conform_get = doc.xpath('//conform_profile/text()')
 
       puts conform_get
 
       conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/CONFORM_TARGET_DIR/,"#{conform_folder}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
 
-      transcode_get= doc.xpath('//target_profile/text()')
+      transcode_get= doc.xpath('//transcode_profile/text()')
       target_path= doc.xpath('//target_path/text()')
 
-      transcode = transcode_get.to_s.gsub(/C_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRG_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}")
+      transcode = transcode_get.to_s.gsub(/T_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRC_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}")
 
       puts conform
 
@@ -280,16 +280,16 @@ def process_3
       puts doc
       puts ''
 
-      conform_get = doc.xpath('//transcode_profile/text()')
+      conform_get = doc.xpath('//conform_profile/text()')
 
       puts conform_get
 
       conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/CONFORM_TARGET_DIR/,"#{conform_folder}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
 
-      transcode_get= doc.xpath('//target_profile/text()')
+      transcode_get= doc.xpath('//transcode_profile/text()')
       target_path= doc.xpath('//target_path/text()')
 
-      transcode = transcode_get.to_s.gsub(/C_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRG_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}")
+      transcode = transcode_get.to_s.gsub(/T_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRC_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}")
 
       puts conform
 
@@ -392,16 +392,16 @@ def process_4
       puts doc
       puts ''
 
-      conform_get = doc.xpath('//transcode_profile/text()')
+      conform_get = doc.xpath('//conform_profile/text()')
 
       puts conform_get
 
       conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/CONFORM_TARGET_DIR/,"#{conform_folder}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
 
-      transcode_get= doc.xpath('//target_profile/text()')
+      transcode_get= doc.xpath('//transcode_profile/text()')
       target_path= doc.xpath('//target_path/text()')
 
-      transcode = transcode_get.to_s.gsub(/C_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRG_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}")
+      transcode = transcode_get.to_s.gsub(/T_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRC_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}")
 
       puts conform
 
