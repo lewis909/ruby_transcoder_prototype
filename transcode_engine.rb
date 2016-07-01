@@ -4,9 +4,6 @@ require 'thread'
 require 'Nokogiri'
 require 'mysql2'
 
-
-
-
 def process_1
 
   Dir['F:/Transcoder/staging/*.mp4'].each do |f|
@@ -38,8 +35,7 @@ def process_1
 
       doc = Nokogiri::XML(File.read("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/#{xml}"))
 
-      task_id_get = doc.xpath('//manifest/@task_id')
-      task_id = task_id_get.to_s
+      task_id = doc.xpath('//manifest/@task_id').to_s
 
       puts ''
       puts "Processing Task #{task_id}"
@@ -57,12 +53,49 @@ def process_1
 
       puts conform_get
 
-      conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/CONFORM_TARGET_DIR/,"#{conform_folder}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
+      #conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/CONFORM_TARGET_DIR/,"#{conform_folder}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
 
       transcode_get= doc.xpath('//transcode_profile/text()')
       target_path= doc.xpath('//target_path/text()')
 
-      transcode = transcode_get.to_s.gsub(/T_PATH/,"#{conform_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/TRC_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}")
+
+      seg_number = doc.xpath('//number_of_segments/text()').to_s
+
+      puts "#{seg_number}"
+
+      seg_1_start = doc.xpath('//segment_1/@seg_1_start').to_s
+      seg_1_dur = doc.xpath('//segment_1/@seg_1_dur').to_s
+
+      seg_2_start = doc.xpath('//segment_2/@seg_2_start').to_s
+      seg_2_dur = doc.xpath('//segment_2/@seg_2_dur').to_s
+
+      seg_3_start = doc.xpath('//segment_3/@seg_3_start').to_s
+      seg_3_dur = doc.xpath('//segment_3/@seg_3_dur').to_s
+
+      seg_4_start = doc.xpath('//segment_4/@seg_4_start').to_s
+      seg_4_dur = doc.xpath('//segment_4/@seg_4_dur').to_s
+
+      if seg_number == '1'
+
+        seg_conform = "-ss #{seg_1_start} -t #{seg_1_dur} #{conform_folder}/s1_#{file_name}.mp4"
+
+        puts "Number of Segments #{seg_conform}"
+
+        conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/SEG_CONFORM/,"#{seg_conform}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
+
+      elsif seg_number =='2'
+
+        seg_conform = "-ss #{seg_1_start} -t #{seg_1_dur} #{conform_folder}/s1_#{file_name}.mp4 -ss #{seg_2_start} -t #{seg_2_dur} #{conform_folder}/s2_#{file_name}.mp4"
+
+        puts "Number of Segments #{seg_conform}"
+
+        conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/SEG_CONFORM/,"#{seg_conform}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
+
+
+      end
+
+
+
 
       puts conform
 
@@ -78,6 +111,16 @@ def process_1
       puts ''
       puts "#{time} Conform complete"
       puts ''
+
+      seg_list = Dir[conform_folder + '/*']
+
+      File.open("#{conform_folder}/#{file_name}_conform_list.txt", "w+") do |f|
+        seg_list.each { |element| f.puts('file ' + "'" + element +"'") }
+      end
+
+      conform_list = "#{file_name}_conform_list.txt"
+
+      transcode = transcode_get.to_s.gsub(/T_PATH/,"#{conform_folder}").gsub(/CONFORM_LIST/,"#{conform_list}").gsub(/F_NAME/,"#{file_name}").gsub(/TRC_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}").gsub('/','\\')
 
 
       puts transcode_get
