@@ -60,8 +60,6 @@ class Job_transcode
 
           puts conform_get
 
-          #conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/CONFORM_TARGET_DIR/,"#{conform_folder}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
-
           transcode_get= doc.xpath('//transcode_profile/text()')
           target_path= doc.xpath('//target_path/text()')
 
@@ -118,9 +116,6 @@ class Job_transcode
 
           end
 
-
-
-
           puts conform
 
           conform_query = dbc.query("UPDATE task SET status ='Conforming' WHERE task_id ='#{task_id}'")
@@ -146,7 +141,6 @@ class Job_transcode
 
           transcode = transcode_get.to_s.gsub(/T_PATH/,"#{conform_folder}").gsub(/CONFORM_LIST/,"#{conform_list}").gsub(/F_NAME/,"#{file_name}").gsub(/TRC_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}").gsub('/','\\')
 
-
           puts transcode_get
           puts transcode
 
@@ -154,9 +148,8 @@ class Job_transcode
           puts "#{time} Task ID(#{task_id}) Transcode started"
           puts ''
 
-
-          transcode_query = dbc.query("UPDATE task SET status ='Transcoding' WHERE task_id ='#{task_id}'")
-          transcode_query
+          transcode_start = dbc.query("UPDATE task SET status ='Transcoding' WHERE task_id ='#{task_id}'")
+          transcode_start
 
           system("#{transcode}")
 
@@ -164,9 +157,8 @@ class Job_transcode
           puts "##{time} Task ID(#{task_id}) Transcode complete"
           puts ''
 
-
-          transcode_query = dbc.query("UPDATE task SET status ='Complete' WHERE task_id ='#{task_id}'")
-          transcode_query
+          transcode_complete = dbc.query("UPDATE task SET status ='Complete' WHERE task_id ='#{task_id}'")
+          transcode_complete
 
           sleep(3)
 
