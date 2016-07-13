@@ -1,6 +1,8 @@
 require 'fileutils'
 require 'Nokogiri'
 
+
+
 Dir['F:/Transcoder/staging/prep/*.xml'].each do |f|
 
   rename = File.basename("#{f}", '.xml')

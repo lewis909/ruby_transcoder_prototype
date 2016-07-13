@@ -1,46 +1,47 @@
 load 'job_prep.rb'
 load 'job_transcode.rb'
+load 'config.rb'
 
 def file_prep
   puts 'Starting File Fetch'
 
   job_prep = Job_prep.new
   job_prep.check_file
-puts 'Fetch complete'
+  puts 'Fetch complete'
 end
 
 def transcode_1
 
   sleep(2)
 
-  job_transcode = Job_transcode.new
+  job_transcode = Job_transcode.new(TranscodeNode.tn1,'Node 1')
   job_transcode.start
 
 end
 
 def transcode_2
 
-  sleep(3)
+  sleep(4)
 
-  job_transcode = Job_transcode.new
+  job_transcode = Job_transcode.new(TranscodeNode.tn2,'Node 2')
   job_transcode.start
 
 end
 
 def transcode_3
 
-  sleep(4)
+  sleep(6)
 
-  job_transcode = Job_transcode.new
+  job_transcode = Job_transcode.new(TranscodeNode.tn3,'Node 3')
   job_transcode.start
 
 end
 
 def transcode_4
 
-  sleep(5)
+  sleep(8)
 
-  job_transcode = Job_transcode.new
+  job_transcode = Job_transcode.new(TranscodeNode.tn4,'Node 4')
   job_transcode.start
 
 end

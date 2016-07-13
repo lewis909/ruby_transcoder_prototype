@@ -217,8 +217,6 @@ def process_2
       puts "Node 2: Processing Task #{task_id}"
       puts ''
 
-
-
       puts ''
       puts 'Parsing xml'
       puts ''
@@ -233,7 +231,6 @@ def process_2
 
       transcode_get= doc.xpath('//transcode_profile/text()')
       target_path= doc.xpath('//target_path/text()')
-
 
       seg_number = doc.xpath('//number_of_segments/text()').to_s
 
@@ -286,9 +283,6 @@ def process_2
 
 
       end
-
-
-
 
       puts conform
 
