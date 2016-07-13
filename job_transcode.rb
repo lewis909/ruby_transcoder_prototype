@@ -31,18 +31,17 @@ class Job_transcode
           #timestamp = time.to_s[0,19].gsub(/ /,'-').gsub(/:/,'')
           new_folder = SecureRandom.uuid
 
-
           dbc = Mysql2::Client.new(:host => 'localhost',:username => 'lewis_transcode', :password => 'tool4602', :database => 'media_hub')
-
 
           if File.exists?("#{watchfolder}#{file_name}.mp4") && File.exist?("#{watchfolder}#{xml}")
             puts ''
             puts "#{time} #{@node_number}: - Files ready starting the transcode process."
             puts ''
 
-            FileUtils::mkdir_p("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/conform")
+            FileUtils::mkdir_p("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/conform/temp")
             temp_folder = "F:/Transcoder/processing_temp/#{file_name}_#{new_folder}"
-            conform_folder ="F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/conform"
+            conform_folder = "F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/conform"
+            temp = "F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/conform/temp"
 
             FileUtils.mv Dir.glob("#{f}"), temp_folder
             FileUtils.mv Dir.glob("#{watchfolder}#{xml}"), temp_folder
@@ -54,14 +53,10 @@ class Job_transcode
             puts ''
             puts "#{time} #{@node_number}:  Processing Task #{task_id}"
             puts ''
-
-
-
-            puts ''
             puts "#{time} #{@node_number}: Parsing xml"
             puts ''
-            puts doc
-            puts ''
+            #puts doc
+            #puts ''
 
             conform_get = doc.xpath('//conform_profile/text()')
 
@@ -123,11 +118,19 @@ class Job_transcode
 
             system("#{conform}")
 
+            seg_list = Dir[conform_folder + '/*.mp4']
+
+            File.open("#{conform_folder}/#{file_name}_conform_list.txt", "w+") do |f|
+
+              seg_list.each { |element| f.puts('file ' + "'" + element +"'") }
+
+            end
+
             Dir["#{conform_folder}"+'/*.mp4'].each do |x|
 
               seg_name = File.basename("#{x}", '.mp4')
 
-              get_seg_dur = "ffprobe -show_entries format=duration #{conform_folder}/#{seg_name}.mp4 > #{conform_folder}/#{seg_name}.txt"
+              get_seg_dur = "ffprobe -show_entries format=duration #{conform_folder}/#{seg_name}.mp4 > #{temp}/#{seg_name}.txt"
 
               p "#{get_seg_dur}"
 
@@ -139,17 +142,9 @@ class Job_transcode
             puts "#{time} #{@node_number}: Task ID(#{task_id}) Conform complete"
             puts ''
 
-            seg_list = Dir[conform_folder + '/*']
-
-            File.open("#{conform_folder}/#{file_name}_conform_list.txt", "w+") do |f|
-              seg_list.each { |element| f.puts('file ' + "'" + element +"'") }
-            end
-
             conform_list = "#{file_name}_conform_list.txt"
 
             transcode = transcode_get.to_s.gsub(/T_PATH/,"#{conform_folder}").gsub(/CONFORM_LIST/,"#{conform_list}").gsub(/F_NAME/,"#{file_name}").gsub(/TRC_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}").gsub('/','\\')
-
-
 
             puts transcode_get
             puts transcode
