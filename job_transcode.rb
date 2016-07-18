@@ -85,11 +85,42 @@ class Job_transcode
 
               conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/SEG_CONFORM/,"#{seg_conform}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
 
+              conform_s1_dur_get = seg_1_dur.split(':')
+
+              s1_1 = conform_s1_dur_get[0].to_i * 3600
+              s1_2 = conform_s1_dur_get[1].to_i * 60
+              s1_3 = conform_s1_dur_get[2].to_i
+              s1_4 = conform_s1_dur_get[3].to_i
+
+              s1_dur_in_sec = s1_1 + s1_2 + s1_3 + s1_4
+
+              con_dur = s1_dur_in_sec
+
             elsif seg_number == '2'
 
               seg_conform = "-ss #{seg_1_start} -t #{seg_1_dur} #{conform_folder}/s1_#{file_name}.mp4 -ss #{seg_2_start} -t #{seg_2_dur} #{conform_folder}/s2_#{file_name}.mp4"
 
               conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/SEG_CONFORM/,"#{seg_conform}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
+
+              conform_s1_dur_get = seg_1_dur.split(':')
+
+              s1_1 = conform_s1_dur_get[0].to_i * 3600
+              s1_2 = conform_s1_dur_get[1].to_i * 60
+              s1_3 = conform_s1_dur_get[2].to_i
+              s1_4 = conform_s1_dur_get[3].to_i
+
+              s1_dur_in_sec = s1_1 + s1_2 + s1_3 + s1_4
+
+              conform_s2_dur_get = seg_2_dur.split(':')
+
+              s2_1 = conform_s2_dur_get[0].to_i * 3600
+              s2_2 = conform_s2_dur_get[1].to_i * 60
+              s2_3 = conform_s2_dur_get[2].to_i
+              s2_4 = conform_s2_dur_get[3].to_i
+
+              s2_dur_in_sec = s2_1 + s2_2 + s2_3 + s2_4
+
+              con_dur = s1_dur_in_sec + s2_dur_in_sec
 
 
             elsif seg_number == '3'
@@ -98,11 +129,78 @@ class Job_transcode
 
               conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/SEG_CONFORM/,"#{seg_conform}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
 
+              conform_s1_dur_get = seg_1_dur.split(':')
+
+              s1_1 = conform_s1_dur_get[0].to_i * 3600
+              s1_2 = conform_s1_dur_get[1].to_i * 60
+              s1_3 = conform_s1_dur_get[2].to_i
+              s1_4 = conform_s1_dur_get[3].to_i
+
+              s1_dur_in_sec = s1_1 + s1_2 + s1_3 + s1_4
+
+              conform_s2_dur_get = seg_2_dur.split(':')
+
+              s2_1 = conform_s2_dur_get[0].to_i * 3600
+              s2_2 = conform_s2_dur_get[1].to_i * 60
+              s2_3 = conform_s2_dur_get[2].to_i
+              s2_4 = conform_s2_dur_get[3].to_i
+
+              s2_dur_in_sec = s2_1 + s2_2 + s2_3 + s2_4
+
+              conform_s3_dur_get = seg_3_dur.split(':')
+
+              s3_1 = conform_s3_dur_get[0].to_i * 3600
+              s3_2 = conform_s3_dur_get[1].to_i * 60
+              s3_3 = conform_s3_dur_get[2].to_i
+              s3_4 = conform_s3_dur_get[3].to_i
+
+              s3_dur_in_sec = s3_1 + s3_2 + s3_3 + s3_4
+
+              con_dur = s1_dur_in_sec + s2_dur_in_sec + s3_dur_in_sec
+
             elsif seg_number =='4'
 
               seg_conform = "-ss #{seg_1_start} -t #{seg_1_dur} #{conform_folder}/s1_#{file_name}.mp4 -ss #{seg_2_start} -t #{seg_2_dur} #{conform_folder}/s2_#{file_name}.mp4 -ss #{seg_3_start} -t #{seg_3_dur} #{conform_folder}/s3_#{file_name}.mp4 -ss #{seg_4_start} -t #{seg_4_dur} #{conform_folder}/s4_#{file_name}.mp4"
 
               conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/SEG_CONFORM/,"#{seg_conform}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
+
+              conform_s1_dur_get = seg_1_dur.split(':')
+
+              s1_1 = conform_s1_dur_get[0].to_i * 3600
+              s1_2 = conform_s1_dur_get[1].to_i * 60
+              s1_3 = conform_s1_dur_get[2].to_i
+              s1_4 = conform_s1_dur_get[3].to_i
+
+              s1_dur_in_sec = s1_1 + s1_2 + s1_3 + s1_4
+
+              conform_s2_dur_get = seg_2_dur.split(':')
+
+              s2_1 = conform_s2_dur_get[0].to_i * 3600
+              s2_2 = conform_s2_dur_get[1].to_i * 60
+              s2_3 = conform_s2_dur_get[2].to_i
+              s2_4 = conform_s2_dur_get[3].to_i
+
+              s2_dur_in_sec = s2_1 + s2_2 + s2_3 + s2_4
+
+              conform_s3_dur_get = seg_3_dur.split(':')
+
+              s3_1 = conform_s3_dur_get[0].to_i * 3600
+              s3_2 = conform_s3_dur_get[1].to_i * 60
+              s3_3 = conform_s3_dur_get[2].to_i
+              s3_4 = conform_s3_dur_get[3].to_i
+
+              s3_dur_in_sec = s3_1 + s3_2 + s3_3 + s3_4
+
+              conform_s4_dur_get = seg_4_dur.split(':')
+
+              s4_1 = conform_s4_dur_get[0].to_i * 3600
+              s4_2 = conform_s4_dur_get[1].to_i * 60
+              s4_3 = conform_s4_dur_get[2].to_i
+              s4_4 = conform_s4_dur_get[3].to_i
+
+              s4_dur_in_sec = s4_1 + s4_2 + s4_3 + s4_4
+
+              con_dur = s1_dur_in_sec + s2_dur_in_sec + s3_dur_in_sec + s4_dur_in_sec
 
 
             end
@@ -123,6 +221,12 @@ class Job_transcode
             File.open("#{conform_folder}/#{file_name}_conform_list.txt", "w+") do |f|
 
               seg_list.each { |element| f.puts('file ' + "'" + element +"'") }
+
+            end
+
+            File.open("F:/Transcoder/logs/transcode_logs/#{task_id}_dur.txt", "w+") do |cd|
+
+              cd.puts con_dur
 
             end
 

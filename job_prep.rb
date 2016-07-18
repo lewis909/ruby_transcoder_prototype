@@ -42,7 +42,6 @@ class Job_prep
         #loadmax =[nc_1,nc_2,nc_3,nc_4].max
         loadmin =[nc_1,nc_2,nc_3,nc_4].min
 
-
         if loadmin == nc_1
 
           FileUtils.copy "F:/Transcoder/repo/#{repo_get}.mp4", prep
