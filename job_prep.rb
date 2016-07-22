@@ -21,11 +21,18 @@ class Job_prep
 
         doc = Nokogiri::XML(File.read("#{f}"))
 
+        puts ''
+        p "#{time}: Checking #{rename}.xml"
+        puts''
         puts doc
+        puts ''
+        puts '-------------------------------------------------------------------'
+        puts''
+
 
         repo_get = doc.xpath('//source_filename/text()')
 
-        puts repo_get
+        #puts repo_get
 
         prep = "F:/Transcoder/staging/prep/#{rename}.mp4"
 
@@ -48,7 +55,7 @@ class Job_prep
           FileUtils.mv Dir.glob("F:/Transcoder/staging/prep/#{rename}.xml"), watchfolder_1
           FileUtils.mv Dir.glob("F:/Transcoder/staging/prep/#{rename}.mp4"), watchfolder_1
 
-          p "#{time}:Files moved to Node 1"
+          puts "#{time}:#{rename}.xml moved to Node 1"
 
         elsif loadmin == nc_2
 
@@ -56,7 +63,7 @@ class Job_prep
           FileUtils.mv Dir.glob("F:/Transcoder/staging/prep/#{rename}.xml"), watchfolder_2
           FileUtils.mv Dir.glob("F:/Transcoder/staging/prep/#{rename}.mp4"), watchfolder_2
 
-          p "#{time}:Files moved to Node 2"
+          puts "#{time}:#{rename}.xml moved to Node 2"
 
         elsif loadmin == nc_3
 
@@ -64,7 +71,7 @@ class Job_prep
           FileUtils.mv Dir.glob("F:/Transcoder/staging/prep/#{rename}.xml"), watchfolder_3
           FileUtils.mv Dir.glob("F:/Transcoder/staging/prep/#{rename}.mp4"), watchfolder_3
 
-          p "#{time}:Files moved to Node 3"
+          puts "#{time}:#{rename}.xml moved to Node 3"
 
         elsif loadmin == nc_4
 
@@ -72,7 +79,7 @@ class Job_prep
           FileUtils.mv Dir.glob("F:/Transcoder/staging/prep/#{rename}.xml"), watchfolder_4
           FileUtils.mv Dir.glob("F:/Transcoder/staging/prep/#{rename}.mp4"), watchfolder_4
 
-          p "#{time}:Files moved to Node 4"
+          puts "#{time}:#{rename}.xml moved to Node 4"
 
         end
 

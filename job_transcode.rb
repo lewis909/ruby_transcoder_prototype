@@ -41,12 +41,14 @@ class Job_transcode
             FileUtils::mkdir_p("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/conform/temp")
             temp_folder = "F:/Transcoder/processing_temp/#{file_name}_#{new_folder}"
             conform_folder = "F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/conform"
-            temp = "F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/conform/temp"
+            temp = "F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/conform/temp/"
 
             FileUtils.mv Dir.glob("#{f}"), temp_folder
-            FileUtils.mv Dir.glob("#{watchfolder}#{xml}"), temp_folder
+            FileUtils.mv Dir.glob("#{watchfolder}#{xml}"), temp
+            File.rename("#{temp}#{xml}","#{temp}core_xml.xml")
 
-            doc = Nokogiri::XML(File.read("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/#{xml}"))
+
+            doc = Nokogiri::XML(File.read("#{temp}core_xml.xml"))
 
             task_id = doc.xpath('//manifest/@task_id').to_s
 
@@ -79,6 +81,10 @@ class Job_transcode
             seg_4_start = doc.xpath('//segment_4/@seg_4_start').to_s
             seg_4_dur = doc.xpath('//segment_4/@seg_4_dur').to_s
 
+            def tc_dur_to_sec(hours, mins, secs)
+              hours.to_i * 3600 + mins.to_i * 60 + secs.to_i
+            end
+
             if seg_number == '1'
 
               seg_conform = "-ss #{seg_1_start} -t #{seg_1_dur} #{conform_folder}/s1_#{file_name}.mp4"
@@ -87,14 +93,7 @@ class Job_transcode
 
               conform_s1_dur_get = seg_1_dur.split(':')
 
-              s1_1 = conform_s1_dur_get[0].to_i * 3600
-              s1_2 = conform_s1_dur_get[1].to_i * 60
-              s1_3 = conform_s1_dur_get[2].to_i
-              s1_4 = conform_s1_dur_get[3].to_i
-
-              s1_dur_in_sec = s1_1 + s1_2 + s1_3 + s1_4
-
-              con_dur = s1_dur_in_sec
+              con_dur =  tc_dur_to_sec(*conform_s1_dur_get)
 
             elsif seg_number == '2'
 
@@ -104,23 +103,9 @@ class Job_transcode
 
               conform_s1_dur_get = seg_1_dur.split(':')
 
-              s1_1 = conform_s1_dur_get[0].to_i * 3600
-              s1_2 = conform_s1_dur_get[1].to_i * 60
-              s1_3 = conform_s1_dur_get[2].to_i
-              s1_4 = conform_s1_dur_get[3].to_i
-
-              s1_dur_in_sec = s1_1 + s1_2 + s1_3 + s1_4
-
               conform_s2_dur_get = seg_2_dur.split(':')
 
-              s2_1 = conform_s2_dur_get[0].to_i * 3600
-              s2_2 = conform_s2_dur_get[1].to_i * 60
-              s2_3 = conform_s2_dur_get[2].to_i
-              s2_4 = conform_s2_dur_get[3].to_i
-
-              s2_dur_in_sec = s2_1 + s2_2 + s2_3 + s2_4
-
-              con_dur = s1_dur_in_sec + s2_dur_in_sec
+              con_dur =  tc_dur_to_sec(*conform_s1_dur_get) + tc_dur_to_sec(*conform_s2_dur_get)
 
 
             elsif seg_number == '3'
@@ -131,32 +116,11 @@ class Job_transcode
 
               conform_s1_dur_get = seg_1_dur.split(':')
 
-              s1_1 = conform_s1_dur_get[0].to_i * 3600
-              s1_2 = conform_s1_dur_get[1].to_i * 60
-              s1_3 = conform_s1_dur_get[2].to_i
-              s1_4 = conform_s1_dur_get[3].to_i
-
-              s1_dur_in_sec = s1_1 + s1_2 + s1_3 + s1_4
-
               conform_s2_dur_get = seg_2_dur.split(':')
-
-              s2_1 = conform_s2_dur_get[0].to_i * 3600
-              s2_2 = conform_s2_dur_get[1].to_i * 60
-              s2_3 = conform_s2_dur_get[2].to_i
-              s2_4 = conform_s2_dur_get[3].to_i
-
-              s2_dur_in_sec = s2_1 + s2_2 + s2_3 + s2_4
 
               conform_s3_dur_get = seg_3_dur.split(':')
 
-              s3_1 = conform_s3_dur_get[0].to_i * 3600
-              s3_2 = conform_s3_dur_get[1].to_i * 60
-              s3_3 = conform_s3_dur_get[2].to_i
-              s3_4 = conform_s3_dur_get[3].to_i
-
-              s3_dur_in_sec = s3_1 + s3_2 + s3_3 + s3_4
-
-              con_dur = s1_dur_in_sec + s2_dur_in_sec + s3_dur_in_sec
+              con_dur =  tc_dur_to_sec(*conform_s1_dur_get) + tc_dur_to_sec(*conform_s2_dur_get) + tc_dur_to_sec(*conform_s3_dur_get)
 
             elsif seg_number =='4'
 
@@ -166,41 +130,13 @@ class Job_transcode
 
               conform_s1_dur_get = seg_1_dur.split(':')
 
-              s1_1 = conform_s1_dur_get[0].to_i * 3600
-              s1_2 = conform_s1_dur_get[1].to_i * 60
-              s1_3 = conform_s1_dur_get[2].to_i
-              s1_4 = conform_s1_dur_get[3].to_i
-
-              s1_dur_in_sec = s1_1 + s1_2 + s1_3 + s1_4
-
               conform_s2_dur_get = seg_2_dur.split(':')
-
-              s2_1 = conform_s2_dur_get[0].to_i * 3600
-              s2_2 = conform_s2_dur_get[1].to_i * 60
-              s2_3 = conform_s2_dur_get[2].to_i
-              s2_4 = conform_s2_dur_get[3].to_i
-
-              s2_dur_in_sec = s2_1 + s2_2 + s2_3 + s2_4
 
               conform_s3_dur_get = seg_3_dur.split(':')
 
-              s3_1 = conform_s3_dur_get[0].to_i * 3600
-              s3_2 = conform_s3_dur_get[1].to_i * 60
-              s3_3 = conform_s3_dur_get[2].to_i
-              s3_4 = conform_s3_dur_get[3].to_i
-
-              s3_dur_in_sec = s3_1 + s3_2 + s3_3 + s3_4
-
               conform_s4_dur_get = seg_4_dur.split(':')
 
-              s4_1 = conform_s4_dur_get[0].to_i * 3600
-              s4_2 = conform_s4_dur_get[1].to_i * 60
-              s4_3 = conform_s4_dur_get[2].to_i
-              s4_4 = conform_s4_dur_get[3].to_i
-
-              s4_dur_in_sec = s4_1 + s4_2 + s4_3 + s4_4
-
-              con_dur = s1_dur_in_sec + s2_dur_in_sec + s3_dur_in_sec + s4_dur_in_sec
+              con_dur =  tc_dur_to_sec(*conform_s1_dur_get) + tc_dur_to_sec(*conform_s2_dur_get) + tc_dur_to_sec(*conform_s3_dur_get) + tc_dur_to_sec(*conform_s4_dur_get)
 
 
             end
@@ -224,21 +160,9 @@ class Job_transcode
 
             end
 
-            File.open("F:/Transcoder/logs/transcode_logs/#{task_id}_dur.txt", "w+") do |cd|
+            File.open("F:/Transcoder/logs/transcode_logs/temp/#{task_id}_dur.txt", "w+") do |cd|
 
               cd.puts con_dur
-
-            end
-
-            Dir["#{conform_folder}"+'/*.mp4'].each do |x|
-
-              seg_name = File.basename("#{x}", '.mp4')
-
-              get_seg_dur = "ffprobe -show_entries format=duration #{conform_folder}/#{seg_name}.mp4 > #{temp}/#{seg_name}.txt"
-
-              p "#{get_seg_dur}"
-
-              system("#{get_seg_dur}")
 
             end
 
@@ -266,8 +190,56 @@ class Job_transcode
             puts "##{time} #{@node_number}: Task ID(#{task_id}) Transcode complete"
             puts ''
 
+
+
+            t_file_name = 'test'
+            file_size = 'test'
+            md5 = 'test'
+
+            i_file_name ='test'
+            i_file_size = 'test'
+            i_md5 = 'test'
+
+
+
+            builder = Nokogiri::XML::Builder.new do |xml|
+              xml.file_data {
+                xml.video_file {
+                  xml.file_name "#{t_file_name}"
+                  xml.file_size "#{file_size}"
+                  xml.md5_checksum "#{md5}"
+                }
+                xml.image_1 {
+                  xml.file_name "#{i_file_name}"
+                  xml.file_size "#{i_file_size}"
+                  xml.md5_checksum "#{i_md5}"
+                }
+              }
+            end
+
+            File.open("#{temp}file_data.xml", "w+") do |fd|
+              fd.puts builder.to_xml
+            end
+
+
+            #TODO need to create file_date .xml
+
+
+
+            profile_xslt = 'google/google.xsl'
+
+            FileUtils.copy 'F:/Transcoder/xslt_repo/google/google.xsl', temp
+
+            #xslt_path = "F:/transcoder/xslt_repo/#{profile_xslt}"
+
+            xslt = "java -jar C:/SaxonHE9-7-0-7J/saxon9he.jar #{temp}core_xml.xml #{temp}google.xsl > #{temp}test.xml"
+
+            system("#{xslt}")
+
             transcode_complete = dbc.query("UPDATE task SET status ='Complete' WHERE task_id ='#{task_id}'")
             transcode_complete
+
+
 
             sleep(3)
 
