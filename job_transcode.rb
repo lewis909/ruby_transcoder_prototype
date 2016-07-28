@@ -4,7 +4,6 @@ require 'thread'
 require 'Nokogiri'
 require 'mysql2'
 require 'digest'
-#load 'config.rb'
 
 class Job_transcode
 
@@ -27,11 +26,11 @@ class Job_transcode
           next if File.exist?(f,) && File.exist?("#{watchfolder}"+'*.xml')
 
           file_name = File.basename("#{f}", '.mp4')
-          #tar_file_name = File.basename("#{f}")
           xml = file_name+'.xml'
 
-          #timestamp = time.to_s[0,19].gsub(/ /,'-').gsub(/:/,'')
-          new_folder = SecureRandom.uuid
+          doc = Nokogiri::XML(File.read("#{@node_path}#{xml}"))
+          task_id = doc.xpath('//manifest/@task_id').to_s
+          new_folder = "task_#{task_id}"
 
           dbc = @dbc
 
@@ -40,20 +39,17 @@ class Job_transcode
             puts "#{time} #{@node_number}: - Files ready starting the transcode process."
             puts ''
 
-            FileUtils::mkdir_p("F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/conform/temp")
-            temp_folder = "F:/Transcoder/processing_temp/#{file_name}_#{new_folder}"
-            conform_folder = "F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/conform"
-            temp = "F:/Transcoder/processing_temp/#{file_name}_#{new_folder}/conform/temp/"
+            FileUtils::mkdir_p("F:/Transcoder/processing_temp/#{new_folder}/conform/temp")
+            conform_folder = "F:/Transcoder/processing_temp/#{new_folder}/conform"
+            temp = "F:/Transcoder/processing_temp/#{new_folder}/conform/temp/"
+            temp_folder = "F:/Transcoder/processing_temp/#{new_folder}"
 
             FileUtils.mv Dir.glob("#{f}"), temp_folder
             FileUtils.mv Dir.glob("#{watchfolder}#{xml}"), temp
-            File.rename("#{temp}#{xml}","#{temp}core_xml.xml")
+            File.rename("#{temp}#{xml}","#{temp}core_metadata.xml")
 
-            doc = Nokogiri::XML(File.read("#{temp}core_xml.xml"))
+            #core_metadata.xml variables
 
-            #xml variables
-
-            task_id = doc.xpath('//manifest/@task_id').to_s
             conform_get = doc.xpath('//conform_profile/text()')
             transcode_get= doc.xpath('//transcode_profile/text()')
             profile = doc.xpath('//transcode_profile/@profile_name').to_s
@@ -68,12 +64,7 @@ class Job_transcode
             seg_4_start = doc.xpath('//segment_4/@seg_4_start').to_s
             seg_4_dur = doc.xpath('//segment_4/@seg_4_dur').to_s
 
-
-            puts ''
-            puts "#{time} #{@node_number}: Processing Task #{task_id}"
-            puts ''
-            puts "#{time} #{@node_number}: Task ID(#{task_id}) Parsing #{xml}"
-            puts ''
+            #segment logic
 
             def tc_dur_to_sec(hours, mins, secs)
               hours.to_i * 3600 + mins.to_i * 60 + secs.to_i
@@ -133,6 +124,16 @@ class Job_transcode
 
 
             end
+
+            #Job Processing starts
+
+            puts ''
+            puts "#{time} #{@node_number}: Processing Task #{task_id} in #{temp_folder}"
+            puts ''
+            puts "#{time} #{@node_number}: Task ID(#{task_id}) Parsing #{xml}"
+            puts ''
+            puts doc
+            puts ''
 
             #puts conform
 
@@ -218,7 +219,7 @@ class Job_transcode
 
             FileUtils.copy "F:/Transcoder/xslt_repo/#{profile}/#{profile}.xsl", temp
 
-            xslt = "java -jar C:/SaxonHE9-7-0-7J/saxon9he.jar #{temp}core_xml.xml #{temp}google.xsl > #{temp}#{file_name}.xml"
+            xslt = "java -jar C:/SaxonHE9-7-0-7J/saxon9he.jar #{temp}core_metadata.xml #{temp}#{profile}.xsl > #{temp}#{file_name}.xml"
 
             system("#{xslt}")
 
@@ -227,6 +228,8 @@ class Job_transcode
 
             FileUtils.mv "#{temp}#{file_name}.mp4", "#{target_path}"
             FileUtils.mv "#{temp}#{file_name}.xml", "#{target_path}"
+
+            puts "#{time} #{@node_number}: Task #{task_id} files moved to #{target_path}"
 
             puts "#{time} #{@node_number}: Task #{task_id} Complete"
 
