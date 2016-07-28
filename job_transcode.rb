@@ -3,14 +3,16 @@ require 'fileutils'
 require 'thread'
 require 'Nokogiri'
 require 'mysql2'
+require 'digest'
 #load 'config.rb'
 
 class Job_transcode
 
-  def initialize(node_path, node_number)
+  def initialize(node_path, node_number, dbc)
 
     @node_path = node_path
     @node_number = node_number
+    @dbc = dbc
 
     def start
 
@@ -25,13 +27,13 @@ class Job_transcode
           next if File.exist?(f,) && File.exist?("#{watchfolder}"+'*.xml')
 
           file_name = File.basename("#{f}", '.mp4')
+          tar_file_name = File.basename("#{f}")
           xml = file_name+'.xml'
 
-          time = Time.now.getutc
           #timestamp = time.to_s[0,19].gsub(/ /,'-').gsub(/:/,'')
           new_folder = SecureRandom.uuid
 
-          dbc = Mysql2::Client.new(:host => 'localhost',:username => 'lewis_transcode', :password => 'tool4602', :database => 'media_hub')
+          dbc = @dbc
 
           if File.exists?("#{watchfolder}#{file_name}.mp4") && File.exist?("#{watchfolder}#{xml}")
             puts ''
@@ -46,7 +48,6 @@ class Job_transcode
             FileUtils.mv Dir.glob("#{f}"), temp_folder
             FileUtils.mv Dir.glob("#{watchfolder}#{xml}"), temp
             File.rename("#{temp}#{xml}","#{temp}core_xml.xml")
-
 
             doc = Nokogiri::XML(File.read("#{temp}core_xml.xml"))
 
@@ -106,7 +107,6 @@ class Job_transcode
               conform_s2_dur_get = seg_2_dur.split(':')
 
               con_dur =  tc_dur_to_sec(*conform_s1_dur_get) + tc_dur_to_sec(*conform_s2_dur_get)
-
 
             elsif seg_number == '3'
 
@@ -172,7 +172,7 @@ class Job_transcode
 
             conform_list = "#{file_name}_conform_list.txt"
 
-            transcode = transcode_get.to_s.gsub(/T_PATH/,"#{conform_folder}").gsub(/CONFORM_LIST/,"#{conform_list}").gsub(/F_NAME/,"#{file_name}").gsub(/TRC_PATH/,"#{target_path}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}").gsub('/','\\')
+            transcode = transcode_get.to_s.gsub(/T_PATH/,"#{conform_folder}").gsub(/CONFORM_LIST/,"#{conform_list}").gsub(/F_NAME/,"#{file_name}").gsub(/TRC_PATH/,"#{temp}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}").gsub('/','\\')
 
             puts transcode_get
             puts transcode
@@ -191,16 +191,13 @@ class Job_transcode
             puts ''
 
 
-
-            t_file_name = 'test'
-            file_size = 'test'
-            md5 = 'test'
+            t_file_name = "#{file_name}.mp4"
+            file_size = File.size("#{temp}#{file_name}.mp4")
+            md5 = Digest::MD5.hexdigest("#{temp}#{file_name}.mp4")
 
             i_file_name ='test'
             i_file_size = 'test'
             i_md5 = 'test'
-
-
 
             builder = Nokogiri::XML::Builder.new do |xml|
               xml.file_data {
@@ -221,10 +218,7 @@ class Job_transcode
               fd.puts builder.to_xml
             end
 
-
             #TODO need to create file_date .xml
-
-
 
             profile_xslt = 'google/google.xsl'
 
@@ -232,14 +226,17 @@ class Job_transcode
 
             #xslt_path = "F:/transcoder/xslt_repo/#{profile_xslt}"
 
-            xslt = "java -jar C:/SaxonHE9-7-0-7J/saxon9he.jar #{temp}core_xml.xml #{temp}google.xsl > #{temp}test.xml"
+            xslt = "java -jar C:/SaxonHE9-7-0-7J/saxon9he.jar #{temp}core_xml.xml #{temp}google.xsl > #{temp}#{file_name}.xml"
 
             system("#{xslt}")
 
             transcode_complete = dbc.query("UPDATE task SET status ='Complete' WHERE task_id ='#{task_id}'")
             transcode_complete
 
+            FileUtils.mv "#{temp}#{file_name}.mp4", "#{target_path}"
+            FileUtils.mv "#{temp}#{file_name}.xml", "#{target_path}"
 
+            puts "#{time} #{@node_number}: Task #{task_id} Complete"
 
             sleep(3)
 
@@ -248,7 +245,6 @@ class Job_transcode
             puts "#{time} #{@node_number}: no files to process"
 
           end
-
 
         end
 

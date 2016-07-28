@@ -29,4 +29,10 @@ module TranscodeNode
 
   end
 
+  def self.dbc
+
+    return Mysql2::Client.new(:host => 'localhost',:username => 'lewis_transcode', :password => 'tool4602', :database => 'media_hub')
+
+  end
+
 end
