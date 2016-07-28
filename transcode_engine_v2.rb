@@ -14,7 +14,7 @@ def transcode_1
 
   sleep(2)
 
-  job_transcode = Job_transcode.new(TranscodeNode.tn1,'Node 1')
+  job_transcode = Job_transcode.new(TranscodeNode.tn1,'Node 1',TranscodeNode.dbc)
   job_transcode.start
 
 end
@@ -23,7 +23,7 @@ def transcode_2
 
   sleep(4)
 
-  job_transcode = Job_transcode.new(TranscodeNode.tn2,'Node 2')
+  job_transcode = Job_transcode.new(TranscodeNode.tn2,'Node 2',TranscodeNode.dbc)
   job_transcode.start
 
 end
@@ -32,7 +32,7 @@ def transcode_3
 
   sleep(6)
 
-  job_transcode = Job_transcode.new(TranscodeNode.tn3,'Node 3')
+  job_transcode = Job_transcode.new(TranscodeNode.tn3,'Node 3',TranscodeNode.dbc)
   job_transcode.start
 
 end
@@ -41,7 +41,7 @@ def transcode_4
 
   sleep(8)
 
-  job_transcode = Job_transcode.new(TranscodeNode.tn4,'Node 4')
+  job_transcode = Job_transcode.new(TranscodeNode.tn4,'Node 4',TranscodeNode.dbc)
   job_transcode.start
 
 end
