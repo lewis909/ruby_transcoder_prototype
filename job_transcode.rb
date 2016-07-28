@@ -27,7 +27,7 @@ class Job_transcode
           next if File.exist?(f,) && File.exist?("#{watchfolder}"+'*.xml')
 
           file_name = File.basename("#{f}", '.mp4')
-          tar_file_name = File.basename("#{f}")
+          #tar_file_name = File.basename("#{f}")
           xml = file_name+'.xml'
 
           #timestamp = time.to_s[0,19].gsub(/ /,'-').gsub(/:/,'')
@@ -51,36 +51,29 @@ class Job_transcode
 
             doc = Nokogiri::XML(File.read("#{temp}core_xml.xml"))
 
+            #xml variables
+
             task_id = doc.xpath('//manifest/@task_id').to_s
-
-            puts ''
-            puts "#{time} #{@node_number}:  Processing Task #{task_id}"
-            puts ''
-            puts "#{time} #{@node_number}: Parsing xml"
-            puts ''
-            #puts doc
-            #puts ''
-
             conform_get = doc.xpath('//conform_profile/text()')
-
-            puts conform_get
-
             transcode_get= doc.xpath('//transcode_profile/text()')
+            profile = doc.xpath('//transcode_profile/@profile_name').to_s
             target_path= doc.xpath('//target_path/text()')
-
             seg_number = doc.xpath('//number_of_segments/text()').to_s
-
             seg_1_start = doc.xpath('//segment_1/@seg_1_start').to_s
             seg_1_dur = doc.xpath('//segment_1/@seg_1_dur').to_s
-
             seg_2_start = doc.xpath('//segment_2/@seg_2_start').to_s
             seg_2_dur = doc.xpath('//segment_2/@seg_2_dur').to_s
-
             seg_3_start = doc.xpath('//segment_3/@seg_3_start').to_s
             seg_3_dur = doc.xpath('//segment_3/@seg_3_dur').to_s
-
             seg_4_start = doc.xpath('//segment_4/@seg_4_start').to_s
             seg_4_dur = doc.xpath('//segment_4/@seg_4_dur').to_s
+
+
+            puts ''
+            puts "#{time} #{@node_number}: Processing Task #{task_id}"
+            puts ''
+            puts "#{time} #{@node_number}: Task ID(#{task_id}) Parsing #{xml}"
+            puts ''
 
             def tc_dur_to_sec(hours, mins, secs)
               hours.to_i * 3600 + mins.to_i * 60 + secs.to_i
@@ -141,7 +134,9 @@ class Job_transcode
 
             end
 
-            puts conform
+            #puts conform
+
+            #Conform Process
 
             conform_query = dbc.query("UPDATE task SET status ='Conforming' WHERE task_id ='#{task_id}'")
             conform_query
@@ -154,13 +149,13 @@ class Job_transcode
 
             seg_list = Dir[conform_folder + '/*.mp4']
 
-            File.open("#{conform_folder}/#{file_name}_conform_list.txt", "w+") do |f|
+            File.open("#{conform_folder}/#{file_name}_conform_list.txt", 'w+') do |f|
 
               seg_list.each { |element| f.puts('file ' + "'" + element +"'") }
 
             end
 
-            File.open("F:/Transcoder/logs/transcode_logs/temp/#{task_id}_dur.txt", "w+") do |cd|
+            File.open("F:/Transcoder/logs/transcode_logs/temp/#{task_id}_dur.txt", 'w+') do |cd|
 
               cd.puts con_dur
 
@@ -170,12 +165,14 @@ class Job_transcode
             puts "#{time} #{@node_number}: Task ID(#{task_id}) Conform complete"
             puts ''
 
+            #Transcode process
+
             conform_list = "#{file_name}_conform_list.txt"
 
             transcode = transcode_get.to_s.gsub(/T_PATH/,"#{conform_folder}").gsub(/CONFORM_LIST/,"#{conform_list}").gsub(/F_NAME/,"#{file_name}").gsub(/TRC_PATH/,"#{temp}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"t_#{task_id}").gsub('/','\\')
 
-            puts transcode_get
-            puts transcode
+            #puts transcode_get
+            #puts transcode
 
             puts ''
             puts "#{time} #{@node_number}: Task ID(#{task_id}) Transcode started"
@@ -190,6 +187,7 @@ class Job_transcode
             puts "##{time} #{@node_number}: Task ID(#{task_id}) Transcode complete"
             puts ''
 
+            #Metadata Process
 
             t_file_name = "#{file_name}.mp4"
             file_size = File.size("#{temp}#{file_name}.mp4")
@@ -214,17 +212,11 @@ class Job_transcode
               }
             end
 
-            File.open("#{temp}file_data.xml", "w+") do |fd|
+            File.open("#{temp}file_data.xml", 'w+') do |fd|
               fd.puts builder.to_xml
             end
 
-            #TODO need to create file_date .xml
-
-            profile_xslt = 'google/google.xsl'
-
-            FileUtils.copy 'F:/Transcoder/xslt_repo/google/google.xsl', temp
-
-            #xslt_path = "F:/transcoder/xslt_repo/#{profile_xslt}"
+            FileUtils.copy "F:/Transcoder/xslt_repo/#{profile}/#{profile}.xsl", temp
 
             xslt = "java -jar C:/SaxonHE9-7-0-7J/saxon9he.jar #{temp}core_xml.xml #{temp}google.xsl > #{temp}#{file_name}.xml"
 
