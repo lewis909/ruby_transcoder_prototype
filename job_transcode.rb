@@ -15,15 +15,13 @@ class Job_transcode
 
     def start
 
-      watchfolder = @node_path
-
       time = Time.now.getutc
 
-      if !Dir.glob("#{watchfolder}"+'*.mp4').empty?
+      if !Dir.glob("#{@node_path}"+'*.mp4').empty?
 
-        Dir["#{watchfolder}"+'*.mp4'].each do |f|
+        Dir["#{@node_path}"+'*.mp4'].each do |f|
 
-          next if File.exist?(f,) && File.exist?("#{watchfolder}"+'*.xml')
+          next if File.exist?(f,) && File.exist?("#{@node_path}"+'*.xml')
 
           file_name = File.basename("#{f}", '.mp4')
           xml = file_name+'.xml'
@@ -32,9 +30,7 @@ class Job_transcode
           task_id = doc.xpath('//manifest/@task_id').to_s
           new_folder = "task_#{task_id}"
 
-          dbc = @dbc
-
-          if File.exists?("#{watchfolder}#{file_name}.mp4") && File.exist?("#{watchfolder}#{xml}")
+          if File.exists?("#{@node_path}#{file_name}.mp4") && File.exist?("#{@node_path}#{xml}")
             puts ''
             puts "#{time} #{@node_number}: - Files ready starting the transcode process."
             puts ''
@@ -45,7 +41,7 @@ class Job_transcode
             temp_folder = "F:/Transcoder/processing_temp/#{new_folder}"
 
             FileUtils.mv Dir.glob("#{f}"), temp_folder
-            FileUtils.mv Dir.glob("#{watchfolder}#{xml}"), temp
+            FileUtils.mv Dir.glob("#{@node_path}#{xml}"), temp
             File.rename("#{temp}#{xml}","#{temp}core_metadata.xml")
 
             #core_metadata.xml variables
@@ -139,7 +135,7 @@ class Job_transcode
 
             #Conform Process
 
-            conform_query = dbc.query("UPDATE task SET status ='Conforming' WHERE task_id ='#{task_id}'")
+            conform_query = @dbc.query("UPDATE task SET status ='Conforming' WHERE task_id ='#{task_id}'")
             conform_query
 
             puts ''
@@ -179,7 +175,7 @@ class Job_transcode
             puts "#{time} #{@node_number}: Task ID(#{task_id}) Transcode started"
             puts ''
 
-            transcode_start = dbc.query("UPDATE task SET status ='Transcoding' WHERE task_id ='#{task_id}'")
+            transcode_start = @dbc.query("UPDATE task SET status ='Transcoding' WHERE task_id ='#{task_id}'")
             transcode_start
 
             system("#{transcode}")
@@ -223,7 +219,7 @@ class Job_transcode
 
             system("#{xslt}")
 
-            transcode_complete = dbc.query("UPDATE task SET status ='Complete' WHERE task_id ='#{task_id}'")
+            transcode_complete = @dbc.query("UPDATE task SET status ='Complete' WHERE task_id ='#{task_id}'")
             transcode_complete
 
             FileUtils.mv "#{temp}#{file_name}.mp4", "#{target_path}"
