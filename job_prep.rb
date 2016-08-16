@@ -24,11 +24,6 @@ class Job_prep
         puts ''
         p "#{time}: Checking #{rename}.xml"
         puts''
-        puts doc
-        puts ''
-        puts '-------------------------------------------------------------------'
-        puts''
-
 
         repo_get = doc.xpath('//source_filename/text()')
 

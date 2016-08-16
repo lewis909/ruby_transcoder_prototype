@@ -4,7 +4,6 @@ load 'config.rb'
 
 def file_prep
   puts 'Starting File Fetch'
-
   job_prep = Job_prep.new
   job_prep.check_file
   puts 'Fetch complete'

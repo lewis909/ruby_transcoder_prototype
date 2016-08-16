@@ -1,5 +1,7 @@
 module TranscodeNode
 
+  #Source Node Paths
+
   @transcode_node_1 = 'F:/Transcoder/staging/node_1/'
   @transcode_node_2 = 'F:/Transcoder/staging/node_2/'
   @transcode_node_3 = 'F:/Transcoder/staging/node_3/'
@@ -28,6 +30,8 @@ module TranscodeNode
     return @transcode_node_4
 
   end
+
+  #Database connection
 
   def self.dbc
 

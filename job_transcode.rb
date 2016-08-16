@@ -40,6 +40,7 @@ class Job_transcode
             temp = "F:/Transcoder/processing_temp/#{new_folder}/conform/temp/"
             temp_folder = "F:/Transcoder/processing_temp/#{new_folder}"
 
+
             FileUtils.mv Dir.glob("#{f}"), temp_folder
             FileUtils.mv Dir.glob("#{@node_path}#{xml}"), temp
             File.rename("#{temp}#{xml}","#{temp}core_metadata.xml")
@@ -49,6 +50,7 @@ class Job_transcode
             conform_get = doc.xpath('//conform_profile/text()')
             transcode_get= doc.xpath('//transcode_profile/text()')
             profile = doc.xpath('//transcode_profile/@profile_name').to_s
+            package_type = doc.xpath('//transcode_profile/@package_type').to_s
             target_path= doc.xpath('//target_path/text()')
             seg_number = doc.xpath('//number_of_segments/text()').to_s
             seg_1_start = doc.xpath('//segment_1/@seg_1_start').to_s
@@ -59,6 +61,8 @@ class Job_transcode
             seg_3_dur = doc.xpath('//segment_3/@seg_3_dur').to_s
             seg_4_start = doc.xpath('//segment_4/@seg_4_start').to_s
             seg_4_dur = doc.xpath('//segment_4/@seg_4_dur').to_s
+
+            dir = "#{target_path}/#{file_name}"
 
             #segment logic
 
@@ -148,7 +152,7 @@ class Job_transcode
 
             File.open("#{conform_folder}/#{file_name}_conform_list.txt", 'w+') do |f|
 
-              seg_list.each { |element| f.puts('file ' + "'" + element +"'") }
+              seg_list.each { |element| f.puts('file ' + "'" + element + "'") }
 
             end
 
@@ -222,12 +226,36 @@ class Job_transcode
             transcode_complete = @dbc.query("UPDATE task SET status ='Complete' WHERE task_id ='#{task_id}'")
             transcode_complete
 
-            FileUtils.mv "#{temp}#{file_name}.mp4", "#{target_path}"
-            FileUtils.mv "#{temp}#{file_name}.xml", "#{target_path}"
+            if package_type == 'flat'
 
-            puts "#{time} #{@node_number}: Task #{task_id} files moved to #{target_path}"
+              FileUtils.mv "#{temp}#{file_name}.mp4", "#{target_path}"
+              FileUtils.mv "#{temp}#{file_name}.xml", "#{target_path}"
 
-            puts "#{time} #{@node_number}: Task #{task_id} Complete"
+              puts "#{time} #{@node_number}: Task #{task_id} files moved to #{target_path}"
+
+              puts "#{time} #{@node_number}: Task #{task_id} Complete"
+
+            elsif package_type == 'dir'
+
+              FileUtils::mkdir_p("#{dir}")
+              FileUtils.mv "#{temp}#{file_name}.mp4", "#{dir}"
+              FileUtils.mv "#{temp}#{file_name}.xml", "#{dir}"
+
+              puts "#{time} #{@node_number}: Task #{task_id} files moved to #{dir}"
+
+              puts "#{time} #{@node_number}: Task #{task_id} Complete"
+
+            elsif package_type == 'tar'
+
+              create_tar = "7z a -ttar #{dir}.tar #{temp}#{file_name}.mp4 #{temp}#{file_name}.xml"
+
+              system("#{create_tar}")
+
+              puts "#{time} #{@node_number}: Task #{task_id} files moved to #{target_path}"
+
+              puts "#{time} #{@node_number}: Task #{task_id} Complete"
+
+            end
 
             sleep(3)
 
