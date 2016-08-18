@@ -139,11 +139,15 @@ class Job_transcode
 
             #Conform Process
 
+            conform_start = Time.now.getutc
+
             conform_query = @dbc.query("UPDATE task SET status ='Conforming' WHERE task_id ='#{task_id}'")
+            job_start_query = @dbc.query("UPDATE task SET job_start_time ='#{conform_start}' WHERE task_id ='#{task_id}'")
             conform_query
+            job_start_query
 
             puts ''
-            puts "#{time} #{@node_number}: Task ID(#{task_id}) Conform started"
+            puts "#{conform_start} #{@node_number}: Task ID(#{task_id}) Conform started"
             puts ''
 
             system("#{conform}")
@@ -162,8 +166,10 @@ class Job_transcode
 
             end
 
+            conform_end = Time.now.getutc
+
             puts ''
-            puts "#{time} #{@node_number}: Task ID(#{task_id}) Conform complete"
+            puts "#{conform_end} #{@node_number}: Task ID(#{task_id}) Conform complete"
             puts ''
 
             #Transcode process
@@ -175,8 +181,10 @@ class Job_transcode
             #puts transcode_get
             #puts transcode
 
+            transcode_start_time = Time.now.getutc
+
             puts ''
-            puts "#{time} #{@node_number}: Task ID(#{task_id}) Transcode started"
+            puts "#{transcode_start_time} #{@node_number}: Task ID(#{task_id}) Transcode started"
             puts ''
 
             transcode_start = @dbc.query("UPDATE task SET status ='Transcoding' WHERE task_id ='#{task_id}'")
@@ -184,8 +192,10 @@ class Job_transcode
 
             system("#{transcode}")
 
+            transcode_end_time = Time.now.getutc
+
             puts ''
-            puts "##{time} #{@node_number}: Task ID(#{task_id}) Transcode complete"
+            puts "##{transcode_end_time} #{@node_number}: Task ID(#{task_id}) Transcode complete"
             puts ''
 
             #Metadata Process
@@ -226,14 +236,21 @@ class Job_transcode
             transcode_complete = @dbc.query("UPDATE task SET status ='Complete' WHERE task_id ='#{task_id}'")
             transcode_complete
 
+
+
+            job_complete_time = Time.now.getutc
+
             if package_type == 'flat'
 
               FileUtils.mv "#{temp}#{file_name}.mp4", "#{target_path}"
               FileUtils.mv "#{temp}#{file_name}.xml", "#{target_path}"
 
-              puts "#{time} #{@node_number}: Task #{task_id} files moved to #{target_path}"
+              file_move_time = Time.now.getutc
 
-              puts "#{time} #{@node_number}: Task #{task_id} Complete"
+              puts "#{file_move_time} #{@node_number}: Task #{task_id} files moved to #{target_path}"
+
+              puts "#{job_complete_time} #{@node_number}: Task #{task_id} Complete"
+
 
             elsif package_type == 'dir'
 
@@ -241,21 +258,29 @@ class Job_transcode
               FileUtils.mv "#{temp}#{file_name}.mp4", "#{dir}"
               FileUtils.mv "#{temp}#{file_name}.xml", "#{dir}"
 
-              puts "#{time} #{@node_number}: Task #{task_id} files moved to #{dir}"
+              puts "#{job_complete_time} #{@node_number}: Task #{task_id} files moved to #{dir}"
 
-              puts "#{time} #{@node_number}: Task #{task_id} Complete"
+              puts "#{job_complete_time} #{@node_number}: Task #{task_id} Complete"
 
             elsif package_type == 'tar'
 
               create_tar = "7z a -ttar #{dir}.tar #{temp}#{file_name}.mp4 #{temp}#{file_name}.xml"
 
+              package_build_time = Time.now.getutc
+
+              puts "#{package_build_time} #{@node_number}: Task #{task_id} Building tar package"
+
               system("#{create_tar}")
 
-              puts "#{time} #{@node_number}: Task #{task_id} files moved to #{target_path}"
+              puts "#{job_complete_time} #{@node_number}: Task #{task_id} files moved to #{target_path}"
 
-              puts "#{time} #{@node_number}: Task #{task_id} Complete"
+              puts "#{job_complete_time} #{@node_number}: Task #{task_id} Complete"
 
             end
+
+            job_end_query = @dbc.query("UPDATE task SET job_end_time ='#{job_complete_time}' WHERE task_id ='#{task_id}'")
+
+            job_end_query
 
             sleep(3)
 
