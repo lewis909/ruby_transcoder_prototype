@@ -53,13 +53,13 @@ class Job_transcode
             package_type = doc.xpath('//transcode_profile/@package_type').to_s
             target_path= doc.xpath('//target_path/text()')
             seg_number = doc.xpath('//number_of_segments/text()').to_s
-            seg_1_start = doc.xpath('//segment_1/@seg_1_start').to_s
+            seg_1_in = doc.xpath('//segment_1/@seg_1_in').to_s
             seg_1_dur = doc.xpath('//segment_1/@seg_1_dur').to_s
-            seg_2_start = doc.xpath('//segment_2/@seg_2_start').to_s
+            seg_2_in = doc.xpath('//segment_2/@seg_2_in').to_s
             seg_2_dur = doc.xpath('//segment_2/@seg_2_dur').to_s
-            seg_3_start = doc.xpath('//segment_3/@seg_3_start').to_s
+            seg_3_in = doc.xpath('//segment_3/@seg_3_in').to_s
             seg_3_dur = doc.xpath('//segment_3/@seg_3_dur').to_s
-            seg_4_start = doc.xpath('//segment_4/@seg_4_start').to_s
+            seg_4_in = doc.xpath('//segment_4/@seg_4_in').to_s
             seg_4_dur = doc.xpath('//segment_4/@seg_4_dur').to_s
 
             dir = "#{target_path}/#{file_name}"
@@ -72,7 +72,7 @@ class Job_transcode
 
             if seg_number == '1'
 
-              seg_conform = "-ss #{seg_1_start} -t #{seg_1_dur} #{conform_folder}/s1_#{file_name}.mp4"
+              seg_conform = "-ss #{seg_1_in} -t #{seg_1_dur} #{conform_folder}/s1_#{file_name}.mp4"
 
               conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/SEG_CONFORM/,"#{seg_conform}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
 
@@ -82,7 +82,7 @@ class Job_transcode
 
             elsif seg_number == '2'
 
-              seg_conform = "-ss #{seg_1_start} -t #{seg_1_dur} #{conform_folder}/s1_#{file_name}.mp4 -ss #{seg_2_start} -t #{seg_2_dur} #{conform_folder}/s2_#{file_name}.mp4"
+              seg_conform = "-ss #{seg_1_in} -t #{seg_1_dur} #{conform_folder}/s1_#{file_name}.mp4 -ss #{seg_2_in} -t #{seg_2_dur} #{conform_folder}/s2_#{file_name}.mp4"
 
               conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/SEG_CONFORM/,"#{seg_conform}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
 
@@ -94,7 +94,7 @@ class Job_transcode
 
             elsif seg_number == '3'
 
-              seg_conform = "-ss #{seg_1_start} -t #{seg_1_dur} #{conform_folder}/s1_#{file_name}.mp4 -ss #{seg_2_start} -t #{seg_2_dur} #{conform_folder}/s2_#{file_name}.mp4 -ss #{seg_3_start} -t #{seg_3_dur} #{conform_folder}/s3_#{file_name}.mp4"
+              seg_conform = "-ss #{seg_1_in} -t #{seg_1_dur} #{conform_folder}/s1_#{file_name}.mp4 -ss #{seg_2_in} -t #{seg_2_dur} #{conform_folder}/s2_#{file_name}.mp4 -ss #{seg_3_in} -t #{seg_3_dur} #{conform_folder}/s3_#{file_name}.mp4"
 
               conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/SEG_CONFORM/,"#{seg_conform}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
 
@@ -108,7 +108,7 @@ class Job_transcode
 
             elsif seg_number =='4'
 
-              seg_conform = "-ss #{seg_1_start} -t #{seg_1_dur} #{conform_folder}/s1_#{file_name}.mp4 -ss #{seg_2_start} -t #{seg_2_dur} #{conform_folder}/s2_#{file_name}.mp4 -ss #{seg_3_start} -t #{seg_3_dur} #{conform_folder}/s3_#{file_name}.mp4 -ss #{seg_4_start} -t #{seg_4_dur} #{conform_folder}/s4_#{file_name}.mp4"
+              seg_conform = "-ss #{seg_1_in} -t #{seg_1_dur} #{conform_folder}/s1_#{file_name}.mp4 -ss #{seg_2_in} -t #{seg_2_dur} #{conform_folder}/s2_#{file_name}.mp4 -ss #{seg_3_in} -t #{seg_3_dur} #{conform_folder}/s3_#{file_name}.mp4 -ss #{seg_4_in} -t #{seg_4_dur} #{conform_folder}/s4_#{file_name}.mp4"
 
               conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/SEG_CONFORM/,"#{seg_conform}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
 
@@ -135,7 +135,7 @@ class Job_transcode
             puts doc
             puts ''
 
-            #puts conform
+            puts conform
 
             #Conform Process
 
