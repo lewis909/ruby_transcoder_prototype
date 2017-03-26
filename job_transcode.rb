@@ -108,7 +108,7 @@ class Job_transcode
 
             elsif seg_number =='4'
 
-              seg_conform = "-ss #{seg_1_in} -t #{seg_1_dur} #{conform_folder}/s1_#{file_name}.mp4 -ss #{seg_2_in} -t #{seg_2_dur} #{conform_folder}/s2_#{file_name}.mp4 -ss #{seg_3_in} -t #{seg_3_dur} #{conform_folder}/s3_#{file_name}.mp4 -ss #{seg_4_in} -t #{seg_4_dur} #{conform_folder}/s4_#{file_name}.mp4"
+              seg_conform = "-safe 0 -ss #{seg_1_in} -t #{seg_1_dur} #{conform_folder}/s1_#{file_name}.mp4 -ss #{seg_2_in} -t #{seg_2_dur} #{conform_folder}/s2_#{file_name}.mp4 -ss #{seg_3_in} -t #{seg_3_dur} #{conform_folder}/s3_#{file_name}.mp4 -ss #{seg_4_in} -t #{seg_4_dur} #{conform_folder}/s4_#{file_name}.mp4"
 
               conform = conform_get.to_s.gsub(/S_PATH/,"#{temp_folder}").gsub(/F_NAME/,"#{file_name}").gsub(/SEG_CONFORM/,"#{seg_conform}").gsub(/2&gt;/,'2>').gsub(/LOG_FILE/,"c_#{task_id}")
 

@@ -41,8 +41,9 @@ class Job_prep
         nc_3 =  node_3.count
         nc_4 =  node_4.count
 
-        #loadmax =[nc_1,nc_2,nc_3,nc_4].max
         loadmin =[nc_1,nc_2,nc_3,nc_4].min
+
+        #puts loadmin
 
         if loadmin == nc_1
 
